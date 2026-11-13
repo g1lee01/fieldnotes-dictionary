@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="styles.css">
     <script src="supabase-config.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="knowledge.js?v=agro-expansion-5" defer></script>
-    <script src="app.js?v=agro-expansion-5" defer></script>
+    <script src="knowledge.js?v=search-ui-2" defer></script>
+    <script src="app.js?v=search-ui-2" defer></script>
   </head>
   <body>
     <div class="workspace">
@@ -45,6 +45,11 @@
         <header class="topbar">
           <button class="mobile-menu" id="mobile-menu" type="button" aria-label="메뉴 열기">☰</button>
           <div class="breadcrumb"><span>Workspace</span><span class="crumb-divider">/</span><strong id="current-view">AI 업무 도우미</strong></div>
+          <form class="global-search" id="global-search-form" role="search">
+            <label class="sr-only" for="global-search-input">전체 용어 검색</label>
+            <input id="global-search-input" type="search" placeholder="용어 검색" autocomplete="off">
+            <button type="submit" aria-label="용어 검색">⌕</button>
+          </form>
           <div class="topbar-actions">
             <span class="prototype-pill"><span></span> MVP · 로컬 검색</span>
             <div class="language-switch" role="group" aria-label="답변 언어">
@@ -87,7 +92,7 @@
             <div class="answer-toolbar">
               <div class="answer-byline"><span class="assistant-avatar">✳</span><span><strong>Fieldnotes Assistant</strong><small id="answer-meta">지식베이스 기반 답변</small></span></div>
               <div class="answer-actions">
-                <button class="tool-button" id="copy-answer" type="button" aria-label="답변 복사" title="답변 복사">▢<span>복사</span></button>
+                <button class="tool-button" id="copy-answer" type="button" aria-label="답변 복사" title="답변 복사"><svg class="copy-note-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 2.75h5.5L14 6.25v9H5z"/><path d="M10.5 2.75v3.5H14M7.5 9h4M7.5 11.5h4"/></svg><span>복사</span></button>
                 <button class="tool-button" id="save-answer" type="button" aria-label="답변 저장" title="답변 저장">☆<span>저장</span></button>
                 <button class="tool-button" id="edit-knowledge" type="button" aria-label="용어 수정 또는 추가" title="용어 수정 또는 추가">✎<span>수정·추가</span></button>
               </div>
@@ -125,6 +130,10 @@
       <div class="admin-header"><div><span class="section-eyebrow">KNOWLEDGE MANAGEMENT</span><h2 id="admin-title">사내 지식 데이터 관리</h2><p>용어를 등록·수정하거나 Excel에서 내보낸 CSV를 가져오세요.</p></div><button class="close-button" id="admin-close" type="button" aria-label="닫기">×</button></div>
       <div class="admin-notice"><strong>데모 데이터 안내</strong><span>현재 자료는 업무 이해를 돕는 샘플입니다. 실제 회사 정책이나 절차가 아닙니다. 데이터는 이 브라우저에만 저장됩니다.</span></div>
       <div class="admin-actions"><button class="secondary-button" id="download-template" type="button">CSV 템플릿 다운로드</button><label class="secondary-button upload-button">CSV 가져오기<input id="csv-upload" type="file" accept=".csv,text/csv"></label><button class="secondary-button" id="export-csv" type="button">전체 내보내기</button><button class="primary-button" id="add-term" type="button">＋ 용어 추가</button></div>
+      <div class="admin-search-row">
+        <label class="admin-search"><span aria-hidden="true">⌕</span><span class="sr-only">수정할 용어 검색</span><input id="admin-search" type="search" placeholder="수정할 용어 검색" autocomplete="off"></label>
+        <span class="admin-result-count" id="admin-result-count" aria-live="polite"></span>
+      </div>
       <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>용어</th><th>카테고리</th><th>정의</th><th>관리</th></tr></thead><tbody id="admin-terms"></tbody></table></div>
       <p class="admin-footnote">CSV 열 이름: id, category, term, english, aliases, definition, definition_en, key_terms, key_terms_en, simple, scenario, steps, cautions, related, sources, keywords. 여러 핵심 구절과 목록 값은 | 로 구분합니다.</p>
       <form class="term-form" id="term-form" hidden>

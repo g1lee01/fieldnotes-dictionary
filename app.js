@@ -407,6 +407,7 @@ function selectCategory(category) {
   browseQuery = "";
   lastQuestion = "";
   $("#browse-search").value = "";
+  $("#global-search-input").value = "";
   $("#welcome").hidden = category !== "all";
   answerArea.hidden = true;
   $("#current-view").textContent = category === "all" ? "AI 업무 도우미" : categoryLabel(category);
@@ -435,6 +436,7 @@ function showHome() {
   browseQuery = "";
   lastQuestion = "";
   $("#browse-search").value = "";
+  $("#global-search-input").value = "";
   $("#welcome").hidden = false;
   answerArea.hidden = true;
   questionInput.value = "";
@@ -458,6 +460,7 @@ function selectCollection(collectionId) {
   browseQuery = "";
   lastQuestion = "";
   $("#browse-search").value = "";
+  $("#global-search-input").value = "";
   $("#welcome").hidden = true;
   answerArea.hidden = true;
   $("#current-view").textContent = answerLanguage === "en" ? collection.titleEn : collection.title;
@@ -1452,7 +1455,29 @@ function showSavedAnswers() {
 
 function renderAdminTable() {
   const body = $("#admin-terms");
-  body.replaceChildren(...terms.map((term) => {
+  const query = normalize($("#admin-search").value);
+  const filteredTerms = terms.filter((term) => !query || normalize([
+    term.term,
+    term.english,
+    ...term.aliases,
+    ...term.keywords,
+    term.definition,
+    categoryLabel(term.category),
+  ].join(" ")).includes(query));
+  $("#admin-result-count").textContent = query
+    ? `${filteredTerms.length} / ${terms.length}개 용어`
+    : `${terms.length}개 용어`;
+  if (!filteredTerms.length) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 4;
+    cell.className = "admin-empty";
+    cell.textContent = "검색 결과가 없습니다.";
+    row.append(cell);
+    body.replaceChildren(row);
+    return;
+  }
+  body.replaceChildren(...filteredTerms.map((term) => {
     const row = document.createElement("tr");
     const termCell = document.createElement("td");
     const title = document.createElement("strong");
@@ -1789,8 +1814,34 @@ $("#follow-up-form").addEventListener("submit", (event) => {
 });
 $("#browse-search").addEventListener("input", (event) => {
   browseQuery = event.target.value;
+  $("#global-search-input").value = browseQuery;
   renderTerms();
 });
+$("#global-search-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const query = $("#global-search-input").value.trim();
+  if (!query) {
+    showHome();
+    return;
+  }
+  browseQuery = query;
+  selectedCategory = "all";
+  openCollectionId = null;
+  activeView = "home";
+  isHomeLanding = true;
+  $("#browse-search").value = query;
+  $("#welcome").hidden = true;
+  answerArea.hidden = true;
+  $("#collection-toolbar").hidden = true;
+  $("#topic-nav").hidden = true;
+  $("#current-view").textContent = answerLanguage === "en" ? "Search" : "검색";
+  document.querySelectorAll(".category-link, .nav-link").forEach((button) => button.classList.remove("is-current"));
+  updateTopicNavigation();
+  renderTerms();
+  closeMobileMenu();
+  $("#browse-area").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+$("#admin-search").addEventListener("input", renderAdminTable);
 $("#show-all").addEventListener("click", () => selectCategory("all"));
 $("#copy-answer").addEventListener("click", async () => {
   try {
@@ -1844,6 +1895,7 @@ function openKnowledgeManager() {
   $(".admin-notice span").textContent = authUser
     ? "기본 사전은 공용 읽기 전용입니다. 여기서 추가한 용어는 로그인한 본인 계정에만 저장되며 다른 사용자에게 공개되지 않습니다."
     : "로그인하지 않은 상태에서 추가·수정한 데이터는 이 브라우저에만 저장됩니다. 로그인 후에는 개인 계정에 별도로 저장됩니다.";
+  $("#admin-search").value = "";
   renderAdminTable();
   $("#admin-dialog").showModal();
   closeMobileMenu();
