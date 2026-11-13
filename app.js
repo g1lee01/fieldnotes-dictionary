@@ -1585,7 +1585,7 @@ function closeMobileMenu() {
 }
 
 function migrateGroupedSeedTerms() {
-  const migrationKey = "fieldnotes-agro-terms-v7";
+  const migrationKey = "fieldnotes-agro-terms-v9";
   try {
     if (localStorage.getItem(migrationKey) === "complete") return;
   } catch (error) {
@@ -1621,7 +1621,7 @@ function migrateGroupedSeedTerms() {
       || collections.some((collection) => (collection.termIds || collection.groups.flatMap((group) => group.ids)).includes(term.id))
     ))
     .map(normalizeTerm);
-  const riceTermLabels = {
+  const seedLabelUpdates = {
     "rice-cultivation-cycle": ["Rice Crop Cycle", "Rice Crop Cycle"],
     "rice-nursery": ["Nursery", "Nursery"],
     "rice-land-preparation": ["Land Preparation", "Land Preparation"],
@@ -1633,22 +1633,57 @@ function migrateGroupedSeedTerms() {
     "rice-weed-management": ["Weed Management", "Weed Management"],
     "rice-pest-disease-monitoring": ["Pest & Disease Monitoring", "Pest & Disease Monitoring"],
     "rice-harvest-postharvest": ["Harvest", "Harvest"],
+    "mode-of-action": ["MoA", "MoA"],
+    "systemic-herbicide": ["Systemic", "Systemic"],
+    "contact-herbicide": ["Contact", "Contact"],
+    "herbicide-resistance": ["Resistance", "Resistance"],
   };
-  const riceTermUpdates = terms.map((term) => {
-    const labels = riceTermLabels[term.id];
-    if (!labels || (term.term === labels[0] && term.english === labels[1])) return term;
-    return { ...term, term: labels[0], english: labels[1] };
-  });
-  const keyTermUpdates = terms.map((term) => {
+  const oldSeedLabels = {
+    "mode-of-action": new Set(["Mode of Action (MoA)", "Mode of Action", "Herbicide Mode of Action"]),
+    "systemic-herbicide": new Set(["Systemic Herbicide"]),
+    "contact-herbicide": new Set(["Contact Herbicide"]),
+    "herbicide-resistance": new Set(["Herbicide Resistance"]),
+  };
+  const refreshSeedIds = new Set([
+    "mode-of-action",
+    "systemic-herbicide",
+    "contact-herbicide",
+    "herbicide-resistance",
+  ]);
+  const seedUpdates = terms.map((term) => {
+    const labels = seedLabelUpdates[term.id];
+    if (!labels) return term;
     const seed = seedTerms.find((item) => item.id === term.id);
-    const riceUpdate = riceTermUpdates.find((item) => item.id === term.id);
-    const base = riceUpdate || term;
-    if (!seed || base.keyTerms.ko.length || base.keyTerms.en.length) return base;
-    return { ...base, keyTerms: normalizeTerm(seed).keyTerms };
+    if (!seed) return term;
+    const shouldRefresh = refreshSeedIds.has(term.id)
+      || oldSeedLabels[term.id]?.has(term.term)
+      || (term.term === labels[0] && term.english !== labels[1]);
+    if (!shouldRefresh && term.term !== labels[0]) return term;
+    const normalizedSeed = normalizeTerm(seed);
+    return {
+      ...term,
+      ...normalizedSeed,
+      keyTerms: term.keyTerms,
+    };
   });
-  const updatedIds = keyTermUpdates.filter((term, index) => term !== terms[index]).length;
+  const keyTermUpdates = seedUpdates.map((term) => {
+    const seed = seedTerms.find((item) => item.id === term.id);
+    if (!seed || term.keyTerms.ko.length || term.keyTerms.en.length) return term;
+    return { ...term, keyTerms: normalizeTerm(seed).keyTerms };
+  });
+  const deduplicatedTerms = [];
+  const seenMoA = new Set();
+  keyTermUpdates.forEach((term) => {
+    if (term.id === "mode-of-action") {
+      if (seenMoA.has(term.id)) return;
+      seenMoA.add(term.id);
+    }
+    deduplicatedTerms.push(term);
+  });
+  const updatedIds = deduplicatedTerms.filter((term, index) => term !== terms[index]).length
+    + Math.max(0, keyTermUpdates.length - deduplicatedTerms.length);
   if (missingGroupedTerms.length || updatedIds) {
-    terms = [...keyTermUpdates, ...missingGroupedTerms];
+    terms = [...deduplicatedTerms, ...missingGroupedTerms];
     if (!persist(STORAGE.terms, terms)) return;
   }
   try {
