@@ -1585,7 +1585,7 @@ function closeMobileMenu() {
 }
 
 function migrateGroupedSeedTerms() {
-  const migrationKey = "fieldnotes-agro-terms-v6";
+  const migrationKey = "fieldnotes-agro-terms-v7";
   try {
     if (localStorage.getItem(migrationKey) === "complete") return;
   } catch (error) {
