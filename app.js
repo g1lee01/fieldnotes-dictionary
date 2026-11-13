@@ -1585,7 +1585,7 @@ function closeMobileMenu() {
 }
 
 function migrateGroupedSeedTerms() {
-  const migrationKey = "fieldnotes-definition-key-terms-v5";
+  const migrationKey = "fieldnotes-agro-terms-v6";
   try {
     if (localStorage.getItem(migrationKey) === "complete") return;
   } catch (error) {
@@ -1593,13 +1593,58 @@ function migrateGroupedSeedTerms() {
     return;
   }
   const knownIds = new Set(terms.map((term) => term.id));
+  const newAgroTermIds = new Set([
+    "glyphosate",
+    "methomyl",
+    "glufosinate",
+    "pendimethalin",
+    "s-metolachlor",
+    "imidacloprid",
+    "chlorantraniliprole",
+    "azoxystrobin",
+    "tebuconazole",
+    "mancozeb",
+    "rice-nursery",
+    "rice-land-preparation",
+    "rice-irrigation-water-management",
+    "rice-water-management",
+    "rice-seeding-transplanting",
+    "rice-transplanting",
+    "rice-nutrient-management",
+    "rice-weed-management",
+    "rice-pest-disease-monitoring",
+    "rice-harvest-postharvest",
+  ]);
   const missingGroupedTerms = seedTerms
-    .filter((term) => !knownIds.has(term.id) && collections.some((collection) => (collection.termIds || collection.groups.flatMap((group) => group.ids)).includes(term.id)))
+    .filter((term) => !knownIds.has(term.id) && (
+      newAgroTermIds.has(term.id)
+      || collections.some((collection) => (collection.termIds || collection.groups.flatMap((group) => group.ids)).includes(term.id))
+    ))
     .map(normalizeTerm);
+  const riceTermLabels = {
+    "rice-cultivation-cycle": ["Rice Crop Cycle", "Rice Crop Cycle"],
+    "rice-nursery": ["Nursery", "Nursery"],
+    "rice-land-preparation": ["Land Preparation", "Land Preparation"],
+    "rice-seeding-transplanting": ["Seeding", "Seeding"],
+    "rice-irrigation-water-management": ["Irrigation", "Irrigation"],
+    "rice-water-management": ["Water Management", "Water Management"],
+    "rice-nutrient-management": ["Nutrient Management", "Nutrient Management"],
+    "rice-transplanting": ["Transplanting", "Transplanting"],
+    "rice-weed-management": ["Weed Management", "Weed Management"],
+    "rice-pest-disease-monitoring": ["Pest & Disease Monitoring", "Pest & Disease Monitoring"],
+    "rice-harvest-postharvest": ["Harvest", "Harvest"],
+  };
+  const riceTermUpdates = terms.map((term) => {
+    const labels = riceTermLabels[term.id];
+    if (!labels || (term.term === labels[0] && term.english === labels[1])) return term;
+    return { ...term, term: labels[0], english: labels[1] };
+  });
   const keyTermUpdates = terms.map((term) => {
     const seed = seedTerms.find((item) => item.id === term.id);
-    if (!seed || term.keyTerms.ko.length || term.keyTerms.en.length) return term;
-    return { ...term, keyTerms: normalizeTerm(seed).keyTerms };
+    const riceUpdate = riceTermUpdates.find((item) => item.id === term.id);
+    const base = riceUpdate || term;
+    if (!seed || base.keyTerms.ko.length || base.keyTerms.en.length) return base;
+    return { ...base, keyTerms: normalizeTerm(seed).keyTerms };
   });
   const updatedIds = keyTermUpdates.filter((term, index) => term !== terms[index]).length;
   if (missingGroupedTerms.length || updatedIds) {
