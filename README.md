@@ -9,19 +9,19 @@
 ## 현재 동작
 
 - 한국어·영어 질문을 받는 로컬 검색형 업무 지식 Assistant
-- 키워드, 별칭, 질문 의도에 기반한 용어 검색과 이전 질문 후속 맥락 처리
+- 약어·풀네임·한국어 별칭을 포함한 용어 검색과 이전 질문 후속 맥락 처리
 - 어떤 화면에서도 보이는 상단 전체 분야 용어 검색과, 지식 관리 화면에서 용어를 바로 찾는 검색
 - 상단 메인 바에서 한국어 또는 English를 선택해 답변 전체의 표시 언어를 한 번에 전환
 - 답변 언어 설정은 용어 설명, 비교표, 참고자료 및 약어 풀이에 적용되고 브라우저에 저장
 - 정의에 포함된 핵심 용어와 대표 약어를 굵게 강조
 - Incoterms®, 운송서류, 결제조건, 농약 제형·안전기간처럼 시각화가 유용한 답변에 자체 제작 개념도 표시
-- Incoterms® 2020, 해상 운송서류, 무역 결제조건, 농약 제형처럼 비교·탐색에 특히 유용한 주제만 왼쪽 **주제별 모음** 메뉴와 첫 화면에 표시
+- Incoterms® 2020, 해상 운송서류, 무역 결제조건, 농약 제형처럼 비교·탐색에 특히 유용한 주제만 상단 **주제별 모음** 메뉴와 첫 화면에 표시
 - 그 외 용어는 업무 분야별 탐색에서 모두 찾을 수 있으며, 각 용어는 무역·물류, 재무, 공급망, 농약, 규제, 비즈니스 중 해당 분야에 분류
-- 주제를 고르면 해당 주제에 포함된 용어를 바로 비교할 수 있고, 업무 분야별 탐색은 왼쪽 사전 메뉴에서 이용
+- 주제를 고르면 해당 주제에 포함된 용어를 바로 비교할 수 있고, 업무 분야별 탐색은 상단 업무 분야 메뉴에서 이용
 - 약 150개 이상의 무역·물류, 재무, 영업, 공급망, 작물보호·비료, 규제 용어를 제공합니다. 농약 제형 모음은 EC·SC·WP·WG·SL·GR·CS·OD·DP 9종을 다루며, glyphosate·glufosinate·pendimethalin·S-metolachlor, methomyl·imidacloprid·chlorantraniliprole, azoxystrobin·tebuconazole·mancozeb 등 제초제·살충제·살균제 유효성분과 대표 상표 예시를 Agrochemicals 분야에서 개별적으로 찾을 수 있습니다. 수도작 용어도 `Irrigation`, `Water Management`, `Seeding`, `Transplanting` 등 짧은 항목으로 분야별 탐색에 포함되며, 별도 수도작 주제 모음은 두지 않습니다. 상표와 등록·사용 범위는 국가·제품마다 다르므로 실제 확인에는 해당 국가의 최신 제품 라벨과 SDS를 사용해야 합니다.
 - 초록색 기반의 원래 UI 컬러 팔레트 유지
-- 왼쪽 위 Fieldnotes 로고를 누르면 검색창과 주제 카드가 있는 첫 화면으로 이동
-- 사이드바 탐색, 용어 카드 제목 및 정의 본문 글씨 크기를 높여 가독성을 개선
+- 상단 Fieldnotes 새싹 로고를 누르면 검색창과 주제 카드가 있는 첫 화면으로 이동
+- 상단 메뉴에서 사전, 저장 답변, 계정 및 지식 데이터 관리 기능 이용
 - Beginner 모드에서는 쉬운 설명과 핵심 주의사항을 먼저, Expert 모드에서는 정의·업무 절차·출처를 자세히 표시
 - 답변에 나온 대표 무역·규제 약어에 짧은 영문·한국어 풀이 표시
 - 질문창 근처에 상황별 예시 질문과 편안한 안내 문구 제공
@@ -50,7 +50,7 @@
 
 ## 샘플 데이터 관리
 
-답변 위의 **수정·추가** 또는 화면 왼쪽의 **지식 데이터 관리**에서 용어를 추가·수정·삭제할 수 있습니다. Excel에서 템플릿 CSV를 열어 편집한 뒤 CSV UTF-8 형식으로 저장하고 가져오세요. 주요 열은 `id`, `category`, `term`, `english`, `aliases`, `definition`, `definition_en`, `simple`, `simple_en`, `scenario`, `scenario_en`, `steps`, `steps_en`, `cautions`, `cautions_en`, `related`, `sources`, `sources_en`, `keywords`입니다. 여러 항목은 `|` 문자로 구분합니다. 사용 가능한 분야 ID는 `trade`, `finance`, `supply`, `agro`, `regulatory`, `business`입니다.
+답변 위의 **수정·추가** 또는 상단의 **지식 데이터 관리**에서 용어를 추가·수정·삭제할 수 있습니다. Excel에서 템플릿 CSV를 열어 편집한 뒤 CSV UTF-8 형식으로 저장하고 가져오세요. 주요 열은 `id`, `category`, `term`, `english`, `aliases`, `definition`, `definition_en`, `simple`, `simple_en`, `scenario`, `scenario_en`, `steps`, `steps_en`, `cautions`, `cautions_en`, `related`, `sources`, `sources_en`, `keywords`입니다. 여러 항목은 `|` 문자로 구분합니다. 사용 가능한 분야 ID는 `trade`, `finance`, `supply`, `agro`, `regulatory`, `business`입니다.
 
 현재 자료는 업무 이해를 돕는 예시이며 회사 규정이나 법률·통관·규제 자문이 아닙니다. 실제 거래, 제품 등록, 결제 및 선적은 최신 원문과 해당 업무 담당자 또는 공식 기관에 확인하세요.
 

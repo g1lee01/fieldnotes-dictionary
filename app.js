@@ -1607,6 +1607,9 @@ function parseCsv(text) {
 function closeMobileMenu() {
   $("#sidebar").classList.remove("is-open");
   $("#mobile-scrim").classList.remove("is-visible");
+  $("#mobile-menu").setAttribute("aria-expanded", "false");
+  $("#mobile-menu").setAttribute("aria-label", "메뉴 열기");
+  $("#category-menu").open = false;
 }
 
 function migrateGroupedSeedTerms() {
@@ -2026,8 +2029,10 @@ $("#csv-upload").addEventListener("change", async (event) => {
   }
 });
 $("#mobile-menu").addEventListener("click", () => {
-  $("#sidebar").classList.toggle("is-open");
-  $("#mobile-scrim").classList.toggle("is-visible");
+  const isOpen = $("#sidebar").classList.toggle("is-open");
+  $("#mobile-scrim").classList.toggle("is-visible", isOpen);
+  $("#mobile-menu").setAttribute("aria-expanded", String(isOpen));
+  $("#mobile-menu").setAttribute("aria-label", isOpen ? "메뉴 닫기" : "메뉴 열기");
 });
 $("#mobile-scrim").addEventListener("click", closeMobileMenu);
 

@@ -9,44 +9,18 @@
     <link rel="stylesheet" href="styles.css">
     <script src="supabase-config.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="knowledge.js?v=search-ui-4" defer></script>
-    <script src="app.js?v=search-ui-4" defer></script>
+    <script src="knowledge.js?v=search-ui-5" defer></script>
+    <script src="app.js?v=search-ui-5" defer></script>
   </head>
   <body>
     <div class="workspace">
-      <aside class="sidebar" id="sidebar">
-        <a class="brand" id="brand-home" href="#home" aria-label="Fieldnotes 홈으로 이동">
-          <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 27V16"/><path d="M18 20c-5.8 0-8.5-3.3-8.5-8.3 5.2 0 8.5 2.4 8.5 8.3Z"/><path d="M18 16.8c0-5.2 3.2-8.2 8.5-8.2 0 5-2.6 8.2-8.5 8.2Z"/><path d="M12 27h12"/></svg></span>
-          <span class="brand-copy"><strong>fieldnotes</strong><small>SMART JARGON DICTIONARY</small></span>
-        </a>
-
-        <button class="new-question" id="new-question" type="button"><span aria-hidden="true">＋</span> 새 질문</button>
-        <div class="side-label">WORKSPACE</div>
-        <button class="nav-link is-current" id="home-link" type="button"><span class="nav-icon">⌂</span> AI 업무 도우미</button>
-        <button class="nav-link" id="favorites-link" type="button"><span class="nav-icon">☆</span> 저장한 답변 <span class="nav-count" id="saved-count">0</span></button>
-
-        <div class="side-label topic-label">TOPICS</div>
-        <button class="nav-link topic-nav-link" id="topics-toggle" type="button" aria-expanded="false" aria-controls="topic-nav">
-          <span class="nav-icon">▤</span><span class="topic-toggle-label">주제별 모음</span><span class="topic-chevron" aria-hidden="true">⌄</span>
-        </button>
-        <nav class="topic-nav" id="topic-nav" aria-label="주제별 모음" hidden></nav>
-
-        <div class="side-label category-label">DICTIONARY</div>
-        <nav class="category-nav" id="category-nav" aria-label="업무 분야"></nav>
-
-        <div class="sidebar-bottom">
-          <button class="account-link" id="account-open" type="button">
-            <svg class="account-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="6.5" r="3"/><path d="M4.5 17v-1.2a5.5 5.5 0 0 1 11 0V17z"/></svg>
-            <span id="account-label">로그인 / 가입</span>
-          </button>
-          <button class="nav-link admin-link" id="admin-open" type="button"><span class="nav-icon">⚙</span> 지식 데이터 관리</button>
-          <div class="local-note" id="storage-note"><span class="status-dot"></span><span>샘플 지식베이스<br><small>로그인하면 개인 데이터가 동기화됩니다</small></span></div>
-        </div>
-      </aside>
-
-      <main class="main-panel">
-        <header class="topbar">
-          <button class="mobile-menu" id="mobile-menu" type="button" aria-label="메뉴 열기">☰</button>
+      <header class="site-header" id="sidebar">
+        <div class="topbar">
+          <button class="mobile-menu" id="mobile-menu" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="primary-nav">☰</button>
+          <a class="brand" id="brand-home" href="#home" aria-label="Fieldnotes 홈으로 이동">
+            <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 27V16"/><path d="M18 20c-5.8 0-8.5-3.3-8.5-8.3 5.2 0 8.5 2.4 8.5 8.3Z"/><path d="M18 16.8c0-5.2 3.2-8.2 8.5-8.2 0 5-2.6 8.2-8.5 8.2Z"/><path d="M12 27h12"/></svg></span>
+            <span class="brand-copy"><strong>fieldnotes</strong><small>SMART JARGON DICTIONARY</small></span>
+          </a>
           <div class="breadcrumb"><span>Workspace</span><span class="crumb-divider">/</span><strong id="current-view">AI 업무 도우미</strong></div>
           <form class="global-search" id="global-search-form" role="search">
             <label class="sr-only" for="global-search-input">전체 용어 검색</label>
@@ -63,8 +37,32 @@
               <button type="button" data-mode="beginner" class="is-selected">Beginner</button>
               <button type="button" data-mode="expert">Expert</button>
             </div>
+            <button class="account-link" id="account-open" type="button">
+              <svg class="account-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="6.5" r="3"/><path d="M4.5 17v-1.2a5.5 5.5 0 0 1 11 0V17z"/></svg>
+              <span id="account-label">로그인 / 가입</span>
+            </button>
           </div>
-        </header>
+        </div>
+        <nav class="primary-nav" id="primary-nav" aria-label="주요 메뉴">
+          <button class="new-question" id="new-question" type="button"><span aria-hidden="true">＋</span> 새 질문</button>
+          <button class="nav-link is-current" id="home-link" type="button"><span class="nav-icon">⌂</span> AI 업무 도우미</button>
+          <button class="nav-link" id="favorites-link" type="button"><span class="nav-icon">☆</span> 저장한 답변 <span class="nav-count" id="saved-count">0</span></button>
+          <div class="topics-control">
+            <button class="nav-link topic-nav-link" id="topics-toggle" type="button" aria-expanded="false" aria-controls="topic-nav">
+              <span class="nav-icon">▤</span><span class="topic-toggle-label">주제별 모음</span><span class="topic-chevron" aria-hidden="true">⌄</span>
+            </button>
+            <nav class="topic-nav" id="topic-nav" aria-label="주제별 모음" hidden></nav>
+          </div>
+          <details class="category-menu" id="category-menu">
+            <summary class="nav-link"><span class="nav-icon">▦</span><span>업무 분야</span><span class="topic-chevron" aria-hidden="true">⌄</span></summary>
+            <nav class="category-nav" id="category-nav" aria-label="업무 분야"></nav>
+          </details>
+          <button class="nav-link admin-link" id="admin-open" type="button"><span class="nav-icon">⚙</span> 지식 데이터 관리</button>
+          <div class="local-note" id="storage-note"><span class="status-dot"></span><span>샘플 지식베이스<br><small>로그인하면 개인 데이터가 동기화됩니다</small></span></div>
+        </nav>
+      </header>
+
+      <main class="main-panel">
         <p class="mode-description" id="mode-description"></p>
 
         <div class="content">
