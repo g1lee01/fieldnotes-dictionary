@@ -1251,7 +1251,7 @@ function renderTerms() {
   const collectionTermIds = activeCollection
     ? new Set(activeCollection.termIds || activeCollection.groups.flatMap((group) => group.ids))
     : new Set();
-  const homeTopics = isHomeLanding && !query ? collections : [];
+  const homeTopics = isHomeLanding && !activeCollection && !query ? collections : [];
   const eligibleTerms = activeCollection
     ? terms.filter((term) => collectionTermIds.has(term.id))
     : terms.filter((term) => selectedCategory === "all" || term.category === selectedCategory);
