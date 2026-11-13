@@ -1585,7 +1585,7 @@ function closeMobileMenu() {
 }
 
 function migrateGroupedSeedTerms() {
-  const migrationKey = "fieldnotes-definition-key-terms-v3";
+  const migrationKey = "fieldnotes-definition-key-terms-v5";
   try {
     if (localStorage.getItem(migrationKey) === "complete") return;
   } catch (error) {
