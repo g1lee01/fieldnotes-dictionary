@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f6f8">
+    <meta name="description" content="해외영업 업무 용어와 실무 지식을 빠르게 찾아보는 Smart Jargon Dictionary">
+    <title>Fieldnotes — Smart Jargon Dictionary</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="supabase-config.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="knowledge.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="workspace">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" id="brand-home" href="#home" aria-label="Fieldnotes 홈으로 이동">
+          <span class="brand-mark" aria-hidden="true">F</span>
+          <span class="brand-copy"><strong>fieldnotes</strong><small>SMART JARGON DICTIONARY</small></span>
+        </a>
+
+        <button class="new-question" id="new-question" type="button"><span aria-hidden="true">＋</span> 새 질문</button>
+        <div class="side-label">WORKSPACE</div>
+        <button class="nav-link is-current" id="home-link" type="button"><span class="nav-icon">⌂</span> AI 업무 도우미</button>
+        <button class="nav-link" id="favorites-link" type="button"><span class="nav-icon">☆</span> 저장한 답변 <span class="nav-count" id="saved-count">0</span></button>
+
+        <div class="side-label topic-label">TOPICS</div>
+        <button class="nav-link topic-nav-link" id="topics-toggle" type="button" aria-expanded="false" aria-controls="topic-nav">
+          <span class="nav-icon">▤</span><span class="topic-toggle-label">주제별 모음</span><span class="topic-chevron" aria-hidden="true">⌄</span>
+        </button>
+        <nav class="topic-nav" id="topic-nav" aria-label="주제별 모음" hidden></nav>
+
+        <div class="side-label category-label">DICTIONARY</div>
+        <nav class="category-nav" id="category-nav" aria-label="업무 분야"></nav>
+
+        <div class="sidebar-bottom">
+          <button class="nav-link account-link" id="account-open" type="button"><span class="nav-icon">↪</span><span id="account-label">로그인 / 가입</span></button>
+          <button class="nav-link admin-link" id="admin-open" type="button"><span class="nav-icon">⚙</span> 지식 데이터 관리</button>
+          <div class="local-note" id="storage-note"><span class="status-dot"></span><span>샘플 지식베이스<br><small>로그인하면 개인 데이터가 동기화됩니다</small></span></div>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <button class="mobile-menu" id="mobile-menu" type="button" aria-label="메뉴 열기">☰</button>
+          <div class="breadcrumb"><span>Workspace</span><span class="crumb-divider">/</span><strong id="current-view">AI 업무 도우미</strong></div>
+          <div class="topbar-actions">
+            <span class="prototype-pill"><span></span> MVP · 로컬 검색</span>
+            <div class="language-switch" role="group" aria-label="답변 언어">
+              <button type="button" data-language="ko" aria-label="한국어 답변" title="한국어 답변">한국어</button>
+              <button type="button" data-language="en" aria-label="English answers" title="English answers">English</button>
+            </div>
+            <div class="mode-switch" role="group" aria-label="답변 모드">
+              <button type="button" data-mode="beginner" class="is-selected">Beginner</button>
+              <button type="button" data-mode="expert">Expert</button>
+            </div>
+          </div>
+        </header>
+        <p class="mode-description" id="mode-description"></p>
+
+        <div class="content">
+          <section class="welcome" id="welcome">
+            <div class="welcome-kicker"><span class="sparkle">✳</span> YOUR OVERSEAS SALES KNOWLEDGE PARTNER</div>
+            <h1>모르는 업무 용어,<br><em>상황 그대로 물어보세요.</em></h1>
+            <p class="welcome-copy">용어를 몰라도 괜찮아요. 업무 상황을 편하게 적어주세요.<br>관련 용어와 먼저 확인할 점을 함께 찾아볼게요.</p>
+
+            <form class="ask-form" id="ask-form" role="search">
+              <label class="sr-only" for="question">업무 질문</label>
+              <textarea id="question" rows="2" placeholder="예: 거래처가 원본 선하증권 없이 화물을 받고 싶대요. 먼저 뭘 확인하면 좋을까요?" required></textarea>
+              <div class="ask-form-bottom">
+                <span class="input-hint"><span class="key-icon">↵</span> Enter로 질문 · Shift + Enter 줄바꿈</span>
+                <button class="ask-button" type="submit">답변 찾기 <span aria-hidden="true">↗</span></button>
+              </div>
+            </form>
+
+            <div class="suggestion-row">
+              <span>이런 질문도 좋아요</span>
+              <button type="button" class="suggestion" data-question="거래처가 원본 B/L 없이 화물을 받고 싶대요. 어떤 점을 확인해야 하나요?">원본 없이 화물 인도</button>
+              <button type="button" class="suggestion" data-question="Surrender B/L과 Sea Waybill, 두 방식은 어떻게 다른가요?">두 운송서류 비교</button>
+              <button type="button" class="suggestion" data-question="CIF 조건에서 보험은 누가 준비하고, 위험은 언제 넘어가나요?">CIF 보험과 위험 시점</button>
+            </div>
+          </section>
+
+          <section class="answer-area" id="answer-area" aria-live="polite" hidden>
+            <div class="question-summary"><span class="question-mark">Q</span><p id="asked-question"></p></div>
+            <div class="answer-toolbar">
+              <div class="answer-byline"><span class="assistant-avatar">✳</span><span><strong>Fieldnotes Assistant</strong><small id="answer-meta">지식베이스 기반 답변</small></span></div>
+              <div class="answer-actions">
+                <button class="tool-button" id="copy-answer" type="button" aria-label="답변 복사" title="답변 복사">▢<span>복사</span></button>
+                <button class="tool-button" id="save-answer" type="button" aria-label="답변 저장" title="답변 저장">☆<span>저장</span></button>
+                <button class="tool-button" id="edit-knowledge" type="button" aria-label="용어 수정 또는 추가" title="용어 수정 또는 추가">✎<span>수정·추가</span></button>
+              </div>
+            </div>
+            <div id="answer-content" class="answer-content"></div>
+            <p class="expert-mode-note" id="expert-mode-note" hidden>절차와 출처를 더 자세히 보려면 Expert 모드를 선택하세요.</p>
+            <div class="source-panel" id="source-panel"></div>
+            <div class="related-panel" id="related-panel"></div>
+            <form class="follow-up-form" id="follow-up-form">
+              <label class="sr-only" for="follow-up-question">후속 질문</label>
+              <input id="follow-up-question" type="text" placeholder="이 답변에 이어서 질문하세요. 예: 그럼 두 방식의 차이는?" autocomplete="off" required>
+              <button type="submit" aria-label="후속 질문 보내기">↗</button>
+            </form>
+          </section>
+
+          <section class="browse-area" id="browse-area">
+            <div class="browse-heading">
+              <div><span class="section-eyebrow" id="browse-eyebrow">업무 분야</span><h2 id="browse-title">업무 분야별로 둘러보기</h2><p id="browse-description">대토픽을 선택해 관련 용어와 실무 지식을 살펴보세요.</p></div>
+              <label class="browse-search"><span aria-hidden="true">⌕</span><span class="sr-only">용어 검색</span><input id="browse-search" type="search" placeholder="용어 검색"></label>
+            </div>
+            <div class="browse-toolbar"><span id="term-count"></span><button class="text-button" id="show-all" type="button">전체 보기</button></div>
+            <div class="collection-toolbar" id="collection-toolbar" hidden>
+              <div><h3 id="collection-title"></h3><p id="collection-description"></p></div>
+            </div>
+            <div class="term-grid" id="term-grid"></div>
+            <p class="empty-state" id="browse-empty" hidden>이 분야에는 아직 등록된 용어가 없습니다.</p>
+          </section>
+          <footer class="page-footer"><span>Fieldnotes Knowledge Platform</span><span>내부 샘플 데이터 · 검색 결과는 업무 판단 전 원문 확인이 필요합니다.</span></footer>
+        </div>
+      </main>
+      <div class="mobile-scrim" id="mobile-scrim"></div>
+    </div>
+
+    <dialog class="admin-dialog" id="admin-dialog" aria-labelledby="admin-title">
+      <div class="admin-header"><div><span class="section-eyebrow">KNOWLEDGE MANAGEMENT</span><h2 id="admin-title">사내 지식 데이터 관리</h2><p>용어를 등록·수정하거나 Excel에서 내보낸 CSV를 가져오세요.</p></div><button class="close-button" id="admin-close" type="button" aria-label="닫기">×</button></div>
+      <div class="admin-notice"><strong>데모 데이터 안내</strong><span>현재 자료는 업무 이해를 돕는 샘플입니다. 실제 회사 정책이나 절차가 아닙니다. 데이터는 이 브라우저에만 저장됩니다.</span></div>
+      <div class="admin-actions"><button class="secondary-button" id="download-template" type="button">CSV 템플릿 다운로드</button><label class="secondary-button upload-button">CSV 가져오기<input id="csv-upload" type="file" accept=".csv,text/csv"></label><button class="secondary-button" id="export-csv" type="button">전체 내보내기</button><button class="primary-button" id="add-term" type="button">＋ 용어 추가</button></div>
+      <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>용어</th><th>카테고리</th><th>정의</th><th>관리</th></tr></thead><tbody id="admin-terms"></tbody></table></div>
+      <p class="admin-footnote">CSV 열 이름: id, category, term, english, aliases, definition, definition_en, key_terms, key_terms_en, simple, scenario, steps, cautions, related, sources, keywords. 여러 핵심 구절과 목록 값은 | 로 구분합니다.</p>
+      <form class="term-form" id="term-form" hidden>
+        <div class="term-form-heading"><h3 id="term-form-title">용어 추가</h3><button class="close-button" id="term-form-close" type="button" aria-label="닫기">×</button></div>
+        <input type="hidden" name="id">
+        <div class="form-grid">
+          <label>용어 *<input name="term" required maxlength="100"></label>
+          <label>영문 명칭<input name="english" maxlength="120"></label>
+          <label>분야 *<select name="category" required></select></label>
+          <label>검색 별칭 ( | 구분)<input name="aliases" placeholder="원본 B/L|선하증권"></label>
+          <label class="wide">정확한 정의 *<textarea name="definition" required rows="2"></textarea></label>
+          <label class="wide">영문 정의<textarea name="definition_en" rows="2"></textarea></label>
+          <label class="wide">정의에서 굵게 강조할 한국어 구절 ( | 구분)<input name="key_terms" placeholder="비유통성 운송서류|지정 수하인"></label>
+          <label class="wide">English phrases to bold in definition (separate with |)<input name="key_terms_en" placeholder="non-negotiable sea transport document|named consignee"></label>
+          <label class="wide">쉽게 설명하기<textarea name="simple" rows="2"></textarea></label>
+          <label class="wide">영문 쉬운 설명<textarea name="simple_en" rows="2"></textarea></label>
+          <label class="wide">업무 상황 및 사례<textarea name="scenario" rows="2"></textarea></label>
+          <label class="wide">영문 실무 사례<textarea name="scenario_en" rows="2"></textarea></label>
+          <label class="wide">절차 ( | 구분)<textarea name="steps" rows="2" placeholder="조건 확인|관련 서류 확인|담당자 승인"></textarea></label>
+          <label class="wide">영문 절차 (separate with |)<textarea name="steps_en" rows="2"></textarea></label>
+          <label class="wide">주의사항<textarea name="cautions" rows="2"></textarea></label>
+          <label class="wide">영문 주의사항<textarea name="cautions_en" rows="2"></textarea></label>
+          <label>관련 용어 ( | 구분)<input name="related"></label>
+          <label>검색 키워드 ( | 구분)<input name="keywords"></label>
+          <label class="wide">출처 / 참고자료 ( | 구분)<textarea name="sources" rows="2"></textarea></label>
+          <label class="wide">영문 출처 / 참고자료 (separate with |)<textarea name="sources_en" rows="2"></textarea></label>
+        </div>
+        <div class="form-actions"><button class="secondary-button" id="term-form-cancel" type="button">취소</button><button class="primary-button" type="submit">저장</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-title">
+      <div class="admin-header">
+        <div><span class="section-eyebrow">FIELDNOTES ACCOUNT</span><h2 id="auth-title">로그인 / 가입</h2><p id="auth-description">계정으로 로그인하면 저장한 답변과 직접 추가한 용어를 다른 기기에서도 사용할 수 있어요.</p></div>
+        <button class="close-button" id="auth-close" type="button" aria-label="닫기">×</button>
+      </div>
+      <p class="auth-setup-notice" id="auth-setup-notice" hidden></p>
+      <form class="auth-form" id="auth-form">
+        <label for="auth-email">이메일</label>
+        <input id="auth-email" name="email" type="email" autocomplete="email" required maxlength="254">
+        <label for="auth-password">비밀번호</label>
+        <input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="8" required>
+        <button class="primary-button auth-submit" id="auth-submit" type="submit">로그인</button>
+      </form>
+      <div class="auth-actions">
+        <button class="text-button" id="auth-toggle-mode" type="button">처음이신가요? 계정 만들기</button>
+        <button class="text-button" id="auth-reset-password" type="button">비밀번호 재설정</button>
+      </div>
+      <div class="auth-signed-in" id="auth-signed-in" hidden>
+        <p>로그인된 계정</p><strong id="auth-user-email"></strong>
+        <button class="secondary-button" id="auth-sign-out" type="button">로그아웃</button>
+      </div>
+      <p class="auth-privacy-note">기본 사전은 공용이며 수정할 수 없습니다. 저장 답변과 직접 추가한 용어는 로그인한 본인만 볼 수 있습니다.</p>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
