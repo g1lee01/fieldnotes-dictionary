@@ -9,14 +9,14 @@
     <link rel="stylesheet" href="styles.css">
     <script src="supabase-config.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <script src="knowledge.js?v=search-ui-2" defer></script>
-    <script src="app.js?v=search-ui-2" defer></script>
+    <script src="knowledge.js?v=search-ui-4" defer></script>
+    <script src="app.js?v=search-ui-4" defer></script>
   </head>
   <body>
     <div class="workspace">
       <aside class="sidebar" id="sidebar">
         <a class="brand" id="brand-home" href="#home" aria-label="Fieldnotes 홈으로 이동">
-          <span class="brand-mark" aria-hidden="true">F</span>
+          <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 27V16"/><path d="M18 20c-5.8 0-8.5-3.3-8.5-8.3 5.2 0 8.5 2.4 8.5 8.3Z"/><path d="M18 16.8c0-5.2 3.2-8.2 8.5-8.2 0 5-2.6 8.2-8.5 8.2Z"/><path d="M12 27h12"/></svg></span>
           <span class="brand-copy"><strong>fieldnotes</strong><small>SMART JARGON DICTIONARY</small></span>
         </a>
 
@@ -35,7 +35,10 @@
         <nav class="category-nav" id="category-nav" aria-label="업무 분야"></nav>
 
         <div class="sidebar-bottom">
-          <button class="nav-link account-link" id="account-open" type="button"><span class="nav-icon">↪</span><span id="account-label">로그인 / 가입</span></button>
+          <button class="account-link" id="account-open" type="button">
+            <svg class="account-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="6.5" r="3"/><path d="M4.5 17v-1.2a5.5 5.5 0 0 1 11 0V17z"/></svg>
+            <span id="account-label">로그인 / 가입</span>
+          </button>
           <button class="nav-link admin-link" id="admin-open" type="button"><span class="nav-icon">⚙</span> 지식 데이터 관리</button>
           <div class="local-note" id="storage-note"><span class="status-dot"></span><span>샘플 지식베이스<br><small>로그인하면 개인 데이터가 동기화됩니다</small></span></div>
         </div>

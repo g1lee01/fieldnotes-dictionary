@@ -544,7 +544,7 @@ window.FIELDNOTES_SEED_ADDITIONS = [
   },
   {
     id: "mode-of-action", category: "agro", term: "MoA", english: "MoA",
-    aliases: ["작용기작", "작용 방식", "MoA"],
+    aliases: ["작용기작", "작용 방식", "mode of action", "mode-of-action", "mechanism of action"],
     keywords: ["작물보호제", "농약", "살충제", "살균제", "제초제", "저항성"],
     definition: "작물보호제가 생물학적 표적이나 생리 과정에 영향을 주어 효과를 나타내는 방식입니다. 분류 체계와 코드는 살충제·살균제·제초제 등 대상과 전문 기관에 따라 다릅니다.",
     definition_en: "The way a crop-protection product affects a biological target or physiological process to produce its effect. Classification systems and codes vary by pesticide type and specialist organization.",

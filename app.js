@@ -1743,7 +1743,37 @@ function migrateSeedAdditions() {
   }
 }
 
+function migrateSearchAliases() {
+  const migrationKey = "fieldnotes-search-aliases-v1";
+  try {
+    if (localStorage.getItem(migrationKey) === "complete") return;
+  } catch (error) {
+    console.error("검색 별칭 이전 상태를 확인하지 못했습니다.", error);
+    return;
+  }
+  let changed = false;
+  const updatedTerms = terms.map((term) => {
+    const seed = seedTerms.find((item) => item.id === term.id);
+    if (!seed) return term;
+    const aliases = [...new Set([...term.aliases, ...normalizeTerm(seed).aliases])];
+    if (aliases.length === term.aliases.length) return term;
+    changed = true;
+    return { ...term, aliases };
+  });
+  if (changed) {
+    if (!persist(STORAGE.terms, updatedTerms)) return;
+    terms = updatedTerms;
+  }
+  try {
+    localStorage.setItem(migrationKey, "complete");
+  } catch (error) {
+    console.error("검색 별칭 이전 상태를 저장하지 못했습니다.", error);
+    notify("검색 별칭은 불러왔지만 다음 방문을 위해 이전 상태를 저장하지 못했습니다.", true);
+  }
+}
+
 migrateGroupedSeedTerms();
+migrateSearchAliases();
 migrateSeedAdditions();
 renderCategories();
 renderSavedCount();
